@@ -1,0 +1,15 @@
+{
+  "name": "wasm-conway-game",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "wasm_conway_game_bg.wasm",
+    "wasm_conway_game.js",
+    "wasm_conway_game.d.ts"
+  ],
+  "main": "wasm_conway_game.js",
+  "types": "wasm_conway_game.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
