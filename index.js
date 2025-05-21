@@ -1,12 +1,12 @@
-import init, { test, step } from "./pkg/wasm_conway_game.js";
+import init, { test, step, neighbor_positions } from "./pkg/wasm_conway_game.js";
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 const cell_length = 100;
 const pixel_length = 4;
-const height = 300;
-const width = 300;
+const height = 400;
+const width = 400;
 const board_state = ctx.createImageData(height, width);
 
 init().then(() => {
@@ -23,7 +23,7 @@ init().then(() => {
     console.log("cell [" + cell_x + "," + cell_y + "]");
     flip_cell_pixels(cell_x, cell_y);
     ctx.putImageData(board_state, 0, 0);
-    console.log("rust: "+step(board_state.data, width, height, cell_length));
+    console.log("rust: " + neighbor_positions(board_state.data, width, height, cell_length, cell_x, cell_y ));
   });
 
   function getCursorPosition(canvas, event) {

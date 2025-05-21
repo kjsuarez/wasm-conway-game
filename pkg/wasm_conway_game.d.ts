@@ -2,6 +2,7 @@
 /* eslint-disable */
 export function test(name: string): number;
 export function step(board: Uint8ClampedArray, width: number, height: number, cell_length: number): Uint32Array;
+export function neighbor_positions(board: Uint8ClampedArray, width: number, height: number, cell_length: number, x: number, y: number): string;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
@@ -9,6 +10,7 @@ export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly test: (a: number, b: number) => number;
   readonly step: (a: number, b: number, c: number, d: number, e: number) => [number, number];
+  readonly neighbor_positions: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => [number, number];
   readonly __wbindgen_free: (a: number, b: number, c: number) => void;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;

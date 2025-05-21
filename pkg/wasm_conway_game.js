@@ -129,6 +129,30 @@ export function step(board, width, height, cell_length) {
     return v2;
 }
 
+/**
+ * @param {Uint8ClampedArray} board
+ * @param {number} width
+ * @param {number} height
+ * @param {number} cell_length
+ * @param {number} x
+ * @param {number} y
+ * @returns {string}
+ */
+export function neighbor_positions(board, width, height, cell_length, x, y) {
+    let deferred2_0;
+    let deferred2_1;
+    try {
+        const ptr0 = passArray8ToWasm0(board, wasm.__wbindgen_malloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.neighbor_positions(ptr0, len0, width, height, cell_length, x, y);
+        deferred2_0 = ret[0];
+        deferred2_1 = ret[1];
+        return getStringFromWasm0(ret[0], ret[1]);
+    } finally {
+        wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
+    }
+}
+
 async function __wbg_load(module, imports) {
     if (typeof Response === 'function' && module instanceof Response) {
         if (typeof WebAssembly.instantiateStreaming === 'function') {

@@ -1,4 +1,7 @@
 extern crate console_error_panic_hook;
+mod cell;
+use crate::cell::Cell;
+use crate::cell::BoardData;
 use std::panic;
 
 use wasm_bindgen::prelude::*;
@@ -18,7 +21,8 @@ pub fn step(board: Clamped<Vec<u8>>, width: u32, height: u32, cell_length: u32) 
     let output = board.clone();
     let cell_count = (board.len()/4)/(cell_length*cell_length) as usize;
     let cell_iter = 0..cell_count;
-    let row_length:u32 = width as u32 / cell_length as u32;
+    let row_length:u32 = width / cell_length as u32;
+    let column_height:u32 = height / cell_length;
 
     let mut xxx: Vec<u32> = Vec::new();
     for cell_index in cell_iter {
@@ -39,28 +43,36 @@ pub fn step(board: Clamped<Vec<u8>>, width: u32, height: u32, cell_length: u32) 
     //output
 }
 
+fn cell_coor_to_cell_index(board_data: &BoardData, x:u32, y:u32) -> u32{
+    (y * board_data.row_length) + x
+}
+
+#[wasm_bindgen]
+pub fn neighbor_positions(board: Clamped<Vec<u8>>, width: u32, height: u32, cell_length: u32, x:u32, y: u32) -> String{
+    panic::set_hook(Box::new(console_error_panic_hook::hook));
+    let board_data = BoardData::new(board.len() as u32, width, height, cell_length);
+    let cell_index = cell_coor_to_cell_index(&board_data, x, y);
+    println!("{}",cell_index);
+    let this_cell = Cell::new(&board_data, cell_index);
+    let mut output = String::new();
+    // NW
+    // N
+    output.push_str(" North:");
+    output.push_str(&this_cell.north().to_string());
+    // NE
+    // E
+    // SE
+    // S
+    output.push_str(" South:");
+    output.push_str(&this_cell.south().to_string());
+    // SW
+    // W
+    output
+}
+
 fn cell_index_to_pixel_index(cell_index:u32, cell_length:u32, row_length:u32) -> u32{
     let your_row = cell_index / row_length;
     let cells_in_row_before_you = cell_index%row_length;
     let pixel = (cell_length * cell_length * your_row * row_length) + (cells_in_row_before_you * cell_length);
     3+(pixel*4)
 }
-
-enum Vertical {
-    ceiling,
-    middle,
-    floor
-}
-enum Horizontal{
-    left,
-    middle,
-    right
-}
-
-struct Cell {
-    id: u32,
-    active: bool,
-    vertical: Vertical,
-    horizontal: Horizontal
-}
-
