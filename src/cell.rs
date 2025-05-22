@@ -17,22 +17,20 @@ impl BoardData {
 
 #[derive(Copy, Clone)]
 pub enum Vertical {
-    ceiling,
-    middle,
-    floor
+    Ceiling,
+    Middle,
+    Floor
 }
 #[derive(Copy, Clone)]
 pub enum Horizontal{
-    left,
-    middle,
-    right
+    Left,
+    Middle,
+    Right
 }
 
 pub struct Cell <'a> {
     board_data: &'a BoardData,
     id: u32,
-    pixel_length:u32,
-    active: bool,
     vertical: Vertical,
     horizontal: Horizontal
 }
@@ -40,17 +38,15 @@ pub struct Cell <'a> {
 impl Cell <'_> {
     pub fn new( board_data: &BoardData, id:u32) -> Cell {
         Cell{
-            pixel_length: board_data.cell_length.clone(),
             board_data,
             id,
-            active:false,
-            vertical: Cell::determine_vertical_position(&board_data, id),
-            horizontal: Cell::determine_horizontal_position(&board_data, id),
+            vertical: Cell::determine_vertical_position(board_data, id),
+            horizontal: Cell::determine_horizontal_position(board_data, id),
         }
     }
     pub fn north(&self) -> u32 {
         match self.vertical {
-            Vertical::ceiling => {
+            Vertical::Ceiling => {
                 self.id + (self.board_data.row_length * (self.board_data.column_height-1))
             }
             _ => {
@@ -60,7 +56,7 @@ impl Cell <'_> {
     }
     pub fn south(&self) -> u32 {
         match self.vertical {
-            Vertical::floor => {
+            Vertical::Floor => {
                 self.id%self.board_data.row_length
             }
             _ => {
@@ -71,7 +67,7 @@ impl Cell <'_> {
 
     pub fn east(&self) -> u32 {
         match self.horizontal {
-            Horizontal::right => {
+            Horizontal::Right => {
                 self.id - (self.board_data.row_length - 1)
             }
             _ => {
@@ -82,7 +78,7 @@ impl Cell <'_> {
 
     pub fn west(&self) -> u32 {
         match self.horizontal {
-            Horizontal::left => {
+            Horizontal::Left => {
                 self.id + (self.board_data.row_length - 1)
             }
             _ => {
@@ -93,13 +89,13 @@ impl Cell <'_> {
 
     pub fn north_west(&self) -> u32 {
         match (self.vertical, self.horizontal) {
-            (Vertical::ceiling, Horizontal::left) => {
+            (Vertical::Ceiling, Horizontal::Left) => {
                 self.board_data.cell_count - 1
             }
-            (Vertical::ceiling, Horizontal::right | Horizontal::middle) => {
+            (Vertical::Ceiling, Horizontal::Right | Horizontal::Middle) => {
                 (self.id + (self.board_data.row_length * (self.board_data.column_height-1))) - 1
             }
-            (Vertical::floor | Vertical::middle, Horizontal::left) => {
+            (Vertical::Floor | Vertical::Middle, Horizontal::Left) => {
                 (self.id + (self.board_data.row_length - 1)) - self.board_data.row_length
             }
             _ => {
@@ -110,13 +106,13 @@ impl Cell <'_> {
 
     pub fn north_east(&self) -> u32 {
         match (self.vertical, self.horizontal) {
-            (Vertical::ceiling, Horizontal::right) => {
+            (Vertical::Ceiling, Horizontal::Right) => {
                 self.board_data.cell_count - self.board_data.row_length
             }
-            (Vertical::ceiling, Horizontal::left | Horizontal::middle) => {
+            (Vertical::Ceiling, Horizontal::Left | Horizontal::Middle) => {
                 (self.id + (self.board_data.row_length * (self.board_data.column_height-1))) + 1
             }
-            (Vertical::floor | Vertical::middle, Horizontal::right) => {
+            (Vertical::Floor | Vertical::Middle, Horizontal::Right) => {
                 self.id - ((self.board_data.row_length * 2) - 1)
             }
             _ => {
@@ -127,13 +123,13 @@ impl Cell <'_> {
 
     pub fn south_east(&self) -> u32 {
         match (self.vertical, self.horizontal) {
-            (Vertical::floor, Horizontal::right) => {
+            (Vertical::Floor, Horizontal::Right) => {
                 0
             }
-            (Vertical::floor, Horizontal::left | Horizontal::middle) => {
+            (Vertical::Floor, Horizontal::Left | Horizontal::Middle) => {
                 (self.id % self.board_data.row_length) + 1
             }
-            (Vertical::ceiling | Vertical::middle, Horizontal::right) => {
+            (Vertical::Ceiling | Vertical::Middle, Horizontal::Right) => {
                 self.id + 1
             }
             _ => {
@@ -144,13 +140,13 @@ impl Cell <'_> {
 
     pub fn south_west(&self) -> u32 {
         match (self.vertical, self.horizontal) {
-            (Vertical::floor, Horizontal::left) => {
+            (Vertical::Floor, Horizontal::Left) => {
                 self.board_data.row_length - 1
             }
-            (Vertical::floor, Horizontal::right | Horizontal::middle) => {
+            (Vertical::Floor, Horizontal::Right | Horizontal::Middle) => {
                 (self.id % self.board_data.row_length) - 1  
             }
-            (Vertical::ceiling | Vertical::middle, Horizontal::left) => {
+            (Vertical::Ceiling | Vertical::Middle, Horizontal::Left) => {
                 self.id + (self.board_data.row_length*2) - 1
             }
             _ => {
@@ -162,24 +158,24 @@ impl Cell <'_> {
     pub fn determine_vertical_position(board_data: &BoardData, id:u32) -> Vertical{
         match id {
             n if n < board_data.row_length => {
-                Vertical::ceiling
+                Vertical::Ceiling
             }
             n if n >= (board_data.cell_count - board_data.row_length) => {
-                Vertical::floor
+                Vertical::Floor
             }
-            _ => Vertical::middle
+            _ => Vertical::Middle
         }
     }
 
     pub fn determine_horizontal_position(board_data: &BoardData, id:u32) -> Horizontal{
         match id {
             n if n % board_data.row_length == 0 => {
-                Horizontal::left
+                Horizontal::Left
             }
             n if (n+1) % board_data.row_length == 0 => {
-                Horizontal::right
+                Horizontal::Right
             }
-            _ => Horizontal::middle
+            _ => Horizontal::Middle
         }
     }
 }

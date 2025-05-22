@@ -35,10 +35,7 @@ pub fn step(board: Clamped<Vec<u8>>, width: u32, height: u32, cell_length: u32) 
     let board_metadata = BoardData::new(board.len() as u32, width, height, cell_length);
     for i in cell_iter {
         let cell_index = i as u32;
-       let cell_state = match state_of_index(cell_index as u32, &board_metadata, &board) {
-            1 => true,
-            _ => false
-        };
+        let cell_state = matches!(state_of_index(cell_index, &board_metadata, &board), 1);
         let neighbor_count = neighbor_count(cell_index, &board_metadata, &board);
         let updated_cell_state = cell_state_from_context(cell_state, neighbor_count);
         if cell_state != updated_cell_state {
