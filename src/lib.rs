@@ -56,17 +56,30 @@ pub fn neighbor_positions(board: Clamped<Vec<u8>>, width: u32, height: u32, cell
     let this_cell = Cell::new(&board_data, cell_index);
     let mut output = String::new();
     // NW
+    output.push_str(" NorthWest:");
+    output.push_str(&this_cell.north_west().to_string());
     // N
     output.push_str(" North:");
     output.push_str(&this_cell.north().to_string());
     // NE
+    output.push_str(" NorthEast:");
+    output.push_str(&this_cell.north_east().to_string());
     // E
+    output.push_str(" East:");
+    output.push_str(&this_cell.east().to_string());
     // SE
+    output.push_str(" SouthEast:");
+    output.push_str(&this_cell.south_east().to_string());
     // S
     output.push_str(" South:");
     output.push_str(&this_cell.south().to_string());
     // SW
+    output.push_str(" SouthWest:");
+    output.push_str(&this_cell.south_west().to_string());
     // W
+    output.push_str(" West:");
+    output.push_str(&this_cell.west().to_string());
+
     output
 }
 
