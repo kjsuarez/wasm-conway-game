@@ -82,16 +82,6 @@ function getDataViewMemory0() {
     }
     return cachedDataViewMemory0;
 }
-/**
- * @param {string} name
- * @returns {number}
- */
-export function test(name) {
-    const ptr0 = passStringToWasm0(name, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.test(ptr0, len0);
-    return ret;
-}
 
 function passArray8ToWasm0(arg, malloc) {
     const ptr = malloc(arg.length * 1, 1) >>> 0;
@@ -99,33 +89,54 @@ function passArray8ToWasm0(arg, malloc) {
     WASM_VECTOR_LEN = arg.length;
     return ptr;
 }
-
-let cachedUint32ArrayMemory0 = null;
-
-function getUint32ArrayMemory0() {
-    if (cachedUint32ArrayMemory0 === null || cachedUint32ArrayMemory0.byteLength === 0) {
-        cachedUint32ArrayMemory0 = new Uint32Array(wasm.memory.buffer);
+/**
+ * @param {Uint8ClampedArray} board
+ * @param {number} width
+ * @param {number} height
+ * @param {number} cell_length
+ * @returns {string}
+ */
+export function test(board, width, height, cell_length) {
+    let deferred2_0;
+    let deferred2_1;
+    try {
+        const ptr0 = passArray8ToWasm0(board, wasm.__wbindgen_malloc);
+        const len0 = WASM_VECTOR_LEN;
+        const ret = wasm.test(ptr0, len0, width, height, cell_length);
+        deferred2_0 = ret[0];
+        deferred2_1 = ret[1];
+        return getStringFromWasm0(ret[0], ret[1]);
+    } finally {
+        wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
     }
-    return cachedUint32ArrayMemory0;
 }
 
-function getArrayU32FromWasm0(ptr, len) {
+let cachedUint8ClampedArrayMemory0 = null;
+
+function getUint8ClampedArrayMemory0() {
+    if (cachedUint8ClampedArrayMemory0 === null || cachedUint8ClampedArrayMemory0.byteLength === 0) {
+        cachedUint8ClampedArrayMemory0 = new Uint8ClampedArray(wasm.memory.buffer);
+    }
+    return cachedUint8ClampedArrayMemory0;
+}
+
+function getClampedArrayU8FromWasm0(ptr, len) {
     ptr = ptr >>> 0;
-    return getUint32ArrayMemory0().subarray(ptr / 4, ptr / 4 + len);
+    return getUint8ClampedArrayMemory0().subarray(ptr / 1, ptr / 1 + len);
 }
 /**
  * @param {Uint8ClampedArray} board
  * @param {number} width
  * @param {number} height
  * @param {number} cell_length
- * @returns {Uint32Array}
+ * @returns {Uint8ClampedArray}
  */
 export function step(board, width, height, cell_length) {
     const ptr0 = passArray8ToWasm0(board, wasm.__wbindgen_malloc);
     const len0 = WASM_VECTOR_LEN;
     const ret = wasm.step(ptr0, len0, width, height, cell_length);
-    var v2 = getArrayU32FromWasm0(ret[0], ret[1]).slice();
-    wasm.__wbindgen_free(ret[0], ret[1] * 4, 4);
+    var v2 = getClampedArrayU8FromWasm0(ret[0], ret[1]).slice();
+    wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
     return v2;
 }
 
@@ -231,8 +242,8 @@ function __wbg_finalize_init(instance, module) {
     wasm = instance.exports;
     __wbg_init.__wbindgen_wasm_module = module;
     cachedDataViewMemory0 = null;
-    cachedUint32ArrayMemory0 = null;
     cachedUint8ArrayMemory0 = null;
+    cachedUint8ClampedArrayMemory0 = null;
 
 
     wasm.__wbindgen_start();

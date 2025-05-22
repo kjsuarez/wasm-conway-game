@@ -3,15 +3,17 @@ import init, { test, step, neighbor_positions } from "./pkg/wasm_conway_game.js"
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-const cell_length = 100;
+const cell_length = 10;
 const pixel_length = 4;
-const height = 400;
-const width = 400;
-const board_state = ctx.createImageData(height, width);
+const height = 500;
+const width = 500;
+let board_state = ctx.createImageData(height, width);
+let running = false;
+
+const step_button = document.getElementById("step-button");
+const start_button = document.getElementById("start-button");
 
 init().then(() => {
-  var two = test("WebAssembly");
-
   // Draw image data to the canvas
   ctx.putImageData(board_state, 0, 0);
 
@@ -25,6 +27,27 @@ init().then(() => {
     ctx.putImageData(board_state, 0, 0);
     console.log("rust: " + neighbor_positions(board_state.data, width, height, cell_length, cell_x, cell_y ));
   });
+
+  step_button.addEventListener("click", async(e)=>{
+    board_state = new ImageData(step(board_state.data, width, height, cell_length), width, height);
+    ctx.putImageData(board_state, 0, 0);
+  });
+
+  start_button.addEventListener("click", async(e)=>{
+    running = !running;
+    if(running) {
+      setInterval(take_step, 10);
+    }
+  });
+
+  function take_step(){
+    if(running) {
+      board_state = new ImageData(step(board_state.data, width, height, cell_length), width, height);
+      ctx.putImageData(board_state, 0, 0);
+      console.log("Running")
+      
+    }
+  }
 
   function getCursorPosition(canvas, event) {
     const rect = canvas.getBoundingClientRect()
@@ -56,6 +79,9 @@ init().then(() => {
     const y_ciel = y_floor + cell_length - 1;
 
     const first_address = coor_to_pixel_address(x_floor, y_floor);
+    const last_address = coor_to_pixel_address(x_ciel, y_ciel);
+    console.log("address of 1st pixel: "+first_address);
+    console.log("address of last pixel: "+last_address)
     const flipped_value = board_state.data[first_address] == 0 ? 255 : 0;
 
     for (let x_index = x_floor; x_index <= x_ciel; x_index++) {
