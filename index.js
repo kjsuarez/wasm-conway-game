@@ -14,6 +14,7 @@ const step_button = document.getElementById("step-button");
 const start_button = document.getElementById("start-button");
 
 init().then(() => {
+  let interval;
   // Draw image data to the canvas
   ctx.putImageData(board_state, 0, 0);
 
@@ -36,7 +37,11 @@ init().then(() => {
   start_button.addEventListener("click", async(e)=>{
     running = !running;
     if(running) {
-      setInterval(take_step, 10);
+      interval = setInterval(take_step, 100);
+      start_button.innerHTML = "stop";
+    } else {
+      clearInterval(interval);
+      start_button.innerHTML = "start";
     }
   });
 

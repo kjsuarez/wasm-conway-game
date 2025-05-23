@@ -39,7 +39,6 @@ pub fn step(board: Clamped<Vec<u8>>, width: u32, height: u32, cell_length: u32) 
         let neighbor_count = neighbor_count(cell_index, &board_metadata, &board);
         let updated_cell_state = cell_state_from_context(cell_state, neighbor_count);
         if cell_state != updated_cell_state {
-            //index:u32, state:bool, board_metadata: &BoardData, mut board: Clamped<Vec<u8>>
             output = update_cell(cell_index, updated_cell_state, &board_metadata, output);
         }
     }
