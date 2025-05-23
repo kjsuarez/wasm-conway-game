@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export function test(board: Uint8ClampedArray, width: number, height: number, cell_length: number): string;
-export function step(board: Uint8ClampedArray, width: number, height: number, cell_length: number): Uint8ClampedArray;
-export function neighbor_positions(board: Uint8ClampedArray, width: number, height: number, cell_length: number, x: number, y: number): string;
+export function step(board_data: Uint8ClampedArray, width: number, height: number, cell_length: number): Uint8ClampedArray;
+export function neighbor_positions(board_data: Uint8ClampedArray, width: number, height: number, cell_length: number, x: number, y: number): string;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 

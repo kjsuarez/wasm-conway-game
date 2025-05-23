@@ -37,7 +37,7 @@ init().then(() => {
   start_button.addEventListener("click", async(e)=>{
     running = !running;
     if(running) {
-      interval = setInterval(take_step, 100);
+      interval = setInterval(take_step, 70);
       start_button.innerHTML = "stop";
     } else {
       clearInterval(interval);

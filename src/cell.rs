@@ -1,16 +1,21 @@
-pub struct BoardData{
+use wasm_bindgen::Clamped;
+use crate::engine::*;
+
+pub struct Board{
+    pub data: Clamped<Vec<u8>>,
     pub cell_count:u32,
     pub row_length:u32,
     pub column_height:u32,
     pub cell_length:u32,
 }
-impl BoardData {
-    pub fn new(board_length: u32, width: u32, height: u32, cell_length: u32) -> BoardData{
-        BoardData{
-            cell_count: (board_length/4)/(cell_length*cell_length),
+impl Board {
+    pub fn new(board: Clamped<Vec<u8>>, width: u32, height: u32, cell_length: u32) -> Board{
+        Board{
+            cell_count: (board.len() as u32/4)/(cell_length*cell_length),
             row_length: width / cell_length,
             column_height: height / cell_length,
-            cell_length
+            cell_length,
+            data: board,
         }
     }
 }
@@ -29,14 +34,14 @@ pub enum Horizontal{
 }
 
 pub struct Cell <'a> {
-    board_data: &'a BoardData,
+    board_data: &'a Board,
     id: u32,
     vertical: Vertical,
     horizontal: Horizontal
 }
 
 impl Cell <'_> {
-    pub fn new( board_data: &BoardData, id:u32) -> Cell {
+    pub fn new( board_data: &Board, id:u32) -> Cell {
         Cell{
             board_data,
             id,
@@ -64,7 +69,6 @@ impl Cell <'_> {
             }
         }
     }
-
     pub fn east(&self) -> u32 {
         match self.horizontal {
             Horizontal::Right => {
@@ -75,7 +79,6 @@ impl Cell <'_> {
             }
         }
     }
-
     pub fn west(&self) -> u32 {
         match self.horizontal {
             Horizontal::Left => {
@@ -86,7 +89,6 @@ impl Cell <'_> {
             }
         }
     }
-
     pub fn north_west(&self) -> u32 {
         match (self.vertical, self.horizontal) {
             (Vertical::Ceiling, Horizontal::Left) => {
@@ -103,7 +105,6 @@ impl Cell <'_> {
             }
         }
     }
-
     pub fn north_east(&self) -> u32 {
         match (self.vertical, self.horizontal) {
             (Vertical::Ceiling, Horizontal::Right) => {
@@ -120,7 +121,6 @@ impl Cell <'_> {
             }
         }
     }
-
     pub fn south_east(&self) -> u32 {
         match (self.vertical, self.horizontal) {
             (Vertical::Floor, Horizontal::Right) => {
@@ -137,7 +137,6 @@ impl Cell <'_> {
             }
         }
     }
-
     pub fn south_west(&self) -> u32 {
         match (self.vertical, self.horizontal) {
             (Vertical::Floor, Horizontal::Left) => {
@@ -154,8 +153,7 @@ impl Cell <'_> {
             }
         }
     }
-
-    pub fn determine_vertical_position(board_data: &BoardData, id:u32) -> Vertical{
+    pub fn determine_vertical_position(board_data: &Board, id:u32) -> Vertical{
         match id {
             n if n < board_data.row_length => {
                 Vertical::Ceiling
@@ -166,8 +164,7 @@ impl Cell <'_> {
             _ => Vertical::Middle
         }
     }
-
-    pub fn determine_horizontal_position(board_data: &BoardData, id:u32) -> Horizontal{
+    pub fn determine_horizontal_position(board_data: &Board, id:u32) -> Horizontal{
         match id {
             n if n % board_data.row_length == 0 => {
                 Horizontal::Left
@@ -177,5 +174,18 @@ impl Cell <'_> {
             }
             _ => Horizontal::Middle
         }
+    }
+    pub fn neighbor_count(&self, board:&Board) -> u8 {
+        let mut count = 0;
+        count += state_of_index(self.north(), board);
+        count += state_of_index(self.north_east(), board);
+        count += state_of_index(self.east(), board);
+        count += state_of_index(self.south_east(), board);
+        count += state_of_index(self.south(), board);
+        count += state_of_index(self.south_west(), board);
+        count += state_of_index(self.west(), board);
+        count += state_of_index(self.north_west(), board);
+    
+        count
     }
 }

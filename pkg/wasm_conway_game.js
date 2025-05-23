@@ -125,14 +125,14 @@ function getClampedArrayU8FromWasm0(ptr, len) {
     return getUint8ClampedArrayMemory0().subarray(ptr / 1, ptr / 1 + len);
 }
 /**
- * @param {Uint8ClampedArray} board
+ * @param {Uint8ClampedArray} board_data
  * @param {number} width
  * @param {number} height
  * @param {number} cell_length
  * @returns {Uint8ClampedArray}
  */
-export function step(board, width, height, cell_length) {
-    const ptr0 = passArray8ToWasm0(board, wasm.__wbindgen_malloc);
+export function step(board_data, width, height, cell_length) {
+    const ptr0 = passArray8ToWasm0(board_data, wasm.__wbindgen_malloc);
     const len0 = WASM_VECTOR_LEN;
     const ret = wasm.step(ptr0, len0, width, height, cell_length);
     var v2 = getClampedArrayU8FromWasm0(ret[0], ret[1]).slice();
@@ -141,7 +141,7 @@ export function step(board, width, height, cell_length) {
 }
 
 /**
- * @param {Uint8ClampedArray} board
+ * @param {Uint8ClampedArray} board_data
  * @param {number} width
  * @param {number} height
  * @param {number} cell_length
@@ -149,11 +149,11 @@ export function step(board, width, height, cell_length) {
  * @param {number} y
  * @returns {string}
  */
-export function neighbor_positions(board, width, height, cell_length, x, y) {
+export function neighbor_positions(board_data, width, height, cell_length, x, y) {
     let deferred2_0;
     let deferred2_1;
     try {
-        const ptr0 = passArray8ToWasm0(board, wasm.__wbindgen_malloc);
+        const ptr0 = passArray8ToWasm0(board_data, wasm.__wbindgen_malloc);
         const len0 = WASM_VECTOR_LEN;
         const ret = wasm.neighbor_positions(ptr0, len0, width, height, cell_length, x, y);
         deferred2_0 = ret[0];
