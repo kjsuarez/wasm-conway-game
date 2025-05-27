@@ -89,27 +89,6 @@ function passArray8ToWasm0(arg, malloc) {
     WASM_VECTOR_LEN = arg.length;
     return ptr;
 }
-/**
- * @param {Uint8ClampedArray} board
- * @param {number} width
- * @param {number} height
- * @param {number} cell_length
- * @returns {string}
- */
-export function test(board, width, height, cell_length) {
-    let deferred2_0;
-    let deferred2_1;
-    try {
-        const ptr0 = passArray8ToWasm0(board, wasm.__wbindgen_malloc);
-        const len0 = WASM_VECTOR_LEN;
-        const ret = wasm.test(ptr0, len0, width, height, cell_length);
-        deferred2_0 = ret[0];
-        deferred2_1 = ret[1];
-        return getStringFromWasm0(ret[0], ret[1]);
-    } finally {
-        wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
-    }
-}
 
 let cachedUint8ClampedArrayMemory0 = null;
 
@@ -141,27 +120,21 @@ export function step(board_data, width, height, cell_length) {
 }
 
 /**
+ * @param {number} cursor_x
+ * @param {number} cursor_y
  * @param {Uint8ClampedArray} board_data
  * @param {number} width
  * @param {number} height
  * @param {number} cell_length
- * @param {number} x
- * @param {number} y
- * @returns {string}
+ * @returns {Uint8ClampedArray}
  */
-export function neighbor_positions(board_data, width, height, cell_length, x, y) {
-    let deferred2_0;
-    let deferred2_1;
-    try {
-        const ptr0 = passArray8ToWasm0(board_data, wasm.__wbindgen_malloc);
-        const len0 = WASM_VECTOR_LEN;
-        const ret = wasm.neighbor_positions(ptr0, len0, width, height, cell_length, x, y);
-        deferred2_0 = ret[0];
-        deferred2_1 = ret[1];
-        return getStringFromWasm0(ret[0], ret[1]);
-    } finally {
-        wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
-    }
+export function flip_cell(cursor_x, cursor_y, board_data, width, height, cell_length) {
+    const ptr0 = passArray8ToWasm0(board_data, wasm.__wbindgen_malloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.flip_cell(cursor_x, cursor_y, ptr0, len0, width, height, cell_length);
+    var v2 = getClampedArrayU8FromWasm0(ret[0], ret[1]).slice();
+    wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
+    return v2;
 }
 
 async function __wbg_load(module, imports) {

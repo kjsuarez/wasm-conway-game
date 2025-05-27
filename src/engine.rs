@@ -50,3 +50,9 @@ pub fn state_of_index(cell_index:u32, board:&Board) -> u8{
 pub fn cell_coor_to_cell_index(board_data: &Board, x:u32, y:u32) -> u32{
     (y * board_data.row_length) + x
 }
+
+pub fn pixel_to_cell_index(cursor_x:u32, cursor_y:u32, board_data: &Board) -> u32{
+    let cell_x:u32 = cursor_x / board_data.cell_length;
+    let cell_y:u32 = cursor_y / board_data.cell_length;
+    cell_coor_to_cell_index(board_data, cell_x, cell_y)
+}
