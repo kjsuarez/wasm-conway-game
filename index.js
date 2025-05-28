@@ -9,7 +9,7 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 let board_state = ctx.createImageData(height, width);
 ctx.putImageData(board_state, 0, 0);
-let step_interval = 70;
+let step_interval = 50;
 let running = false;
 
 const step_button = document.getElementById("step-button");
@@ -25,8 +25,7 @@ init().then(() => {
       width, height, 
       cell_length
     );
-    board_state = new ImageData(
-      next_board_state, width, height);
+    board_state = new ImageData(next_board_state, width, height);
     ctx.putImageData(board_state, 0, 0);
   });
 
@@ -49,7 +48,8 @@ init().then(() => {
 
   function take_step(){
     if(running) {
-      board_state = new ImageData(step(board_state.data, width, height, cell_length), width, height);
+      const next_board_state = step(board_state.data, width, height, cell_length);
+      board_state = new ImageData(next_board_state, width, height);
       ctx.putImageData(board_state, 0, 0);
     }
   }
